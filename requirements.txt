@@ -1,4 +1,4 @@
-# git+https://github.com/minerllabs/minerl
+git+https://github.com/minerllabs/minerl
 tensorflow==2.6.2 
 pandas
 numpy

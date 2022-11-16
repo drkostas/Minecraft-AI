@@ -1,1 +1,13 @@
-git+https://github.com/minerllabs/minerl
+# git+https://github.com/minerllabs/minerl
+tensorflow==2.6.2 
+pandas
+numpy
+ray[default]==1.6.0 
+ray[rllib]==1.6.0 
+ray[tune]==1.6.0 
+attrs==19.1.0 
+gym
+lxml
+pillow
+--extra-index-url https://test.pypi.org/simple/
+malmo

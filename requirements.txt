@@ -8,6 +8,7 @@ attrs==19.1.0
 gym==0.19.0
 lxml
 pillow
+jupyter==1.0.0
 yaml-config-wrapper==1.0.4
 --extra-index-url https://test.pypi.org/simple/
 malmo==0.36.0

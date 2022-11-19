@@ -76,7 +76,9 @@ def main():
         done = False
         while not done:
             action = env.action_space.sample()
+            # Actions: 0 -> move (frwd), 1 -> right, 2 -> left
             obs, reward, done, info = env.step(action)
+            # obs is a numpy array of shape (height, width, 3)
             env.render()
         user_choice = input("Enter 'N' to exit, 'Y' to run new episode [Y/n]: ").lower()
         if user_choice.lower() in ['n', 'no']:

@@ -1,0 +1,28 @@
+tag: lava-maze-v1
+general:
+  - config:
+      name: Lava Maze
+      log_path: ./logs
+      checkpoint_path: ./checkpoints
+      terminal_reward: 85
+tuner:
+  - config:
+      log_level: WARN
+      env: lava_maze_1
+      env_config:
+        mission_file: missions/lava_maze.xml
+        width: 84
+        height: 84
+        millisec_per_tick: 20
+      framework: tf
+      num_gpus: 0
+      num_workers: 1
+      double_q: True
+      dueling: True
+      explore: True
+      exploration_config:
+        type: EpsilonGreedy
+        initial_epsilon: 1.0
+        final_epsilon: 0.02
+        epsilon_timesteps: 100
+    type: ray

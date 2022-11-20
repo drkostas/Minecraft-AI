@@ -19,22 +19,23 @@
       <AllowSpawning>false</AllowSpawning>
     </ServerInitialConditions>
     <ServerHandlers>
-      <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
+      <FlatWorldGenerator generatorString="3;1*minecraft:bedrock,7*minecraft:dirt,1*minecraft:stone;1;"/>
 
       <DrawingDecorator>
         <DrawSphere x="-29" y="70" z="-2" radius="100" type="air"/>
-        <DrawCuboid x1="-34" y1="70" z1="-7" x2="-24" y2="70" z2="3" type="grass" /> 
+        <DrawCuboid x1="-134" y1="170" z1="-7" x2="-124" y2="170" z2="3" type="dirt" /> 
       </DrawingDecorator>
 
       <MazeDecorator>
         <Seed>{PLACEHOLDER_MAZESEED}</Seed>
-        <SizeAndPosition width="5" length="6" height="10" xOrigin="-32" yOrigin="69" zOrigin="-5"/>
+        <SizeAndPosition width="10" length="15" height="10" xOrigin="-32" yOrigin="69" zOrigin="-5"/>
         <StartBlock type="emerald_block" fixedToEdge="true"/>
         <EndBlock type="redstone_block" fixedToEdge="true"/>
-        <PathBlock type="dirt"/>
+        <PathBlock type="stone"/>
         <FloorBlock type="air"/>
-        <GapBlock type="dirt"/>
-        <GapProbability>0.6</GapProbability>
+
+        <GapBlock type="stained_hardened_clay" height="1" heightVariance="1"/>
+        <GapProbability>0.1</GapProbability>
         <AllowDiagonalMovement>false</AllowDiagonalMovement>
       </MazeDecorator>
 

@@ -67,7 +67,11 @@ def main():
             width=800,
             height=600,
             millisec_per_tick=50,
-            mazeseed=maze_seed)
+            mazeseed=maze_seed,
+            action_space=c_general["action_space"],
+            client_port=c_general['client_port'],
+            time_wait=c_general['time_wait'],
+            max_loop=c_general['max_loop'])
         print("Resetting environment ...")
         env.reset()
         print("The world is loaded.")

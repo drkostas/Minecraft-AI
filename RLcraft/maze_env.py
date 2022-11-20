@@ -3,18 +3,11 @@ import malmo.MalmoPython as MalmoPython
 import random
 import time
 import numpy as np
-from enum import Enum
 
-CLIENT_PORT = 9000                  # malmo port
-TIME_WAIT = 0.05                    # time to wait for retreiving world state (when MsPerTick=20)
-MAX_LOOP = 50                       # wait till TIME_WAIT * MAX_LOOP seconds for each action
 
 class AgentActionSpace(gym.spaces.Discrete):
-    def __init__(self):
-        actions = []
-        actions.append("move")
-        actions.append("right")
-        actions.append("left")
+    def __init__(self, action_space):
+        actions = list(action_space.values())
         self.actions = actions
         gym.spaces.Discrete.__init__(self, len(self.actions))
 
@@ -54,9 +47,13 @@ class MalmoMazeEnv(gym.Env):
         xml,
         width,
         height,
+        action_space,
         millisec_per_tick = 50,
         mazeseed = "random",
-        enable_action_history=False):
+        enable_action_history=False,
+        client_port=5000,
+        time_wait=0.1,
+        max_loop=50):
         # Set up gym.Env
         super(MalmoMazeEnv, self).__init__()
         # Initialize self variables
@@ -67,8 +64,10 @@ class MalmoMazeEnv(gym.Env):
         self.millisec_per_tick = millisec_per_tick
         self.mazeseed = mazeseed
         self.enable_action_history = enable_action_history
-        # none:0, move:1, right:2, left:3
-        self.action_space = AgentActionSpace()
+        self.time_wait = time_wait
+        self.max_loop = max_loop
+        # load action space
+        self.action_space = AgentActionSpace(action_space)
         # frame
         self.observation_space = gym.spaces.Box(low=0, high=255, shape=self.shape, dtype=np.float32)
         # Create AgentHost
@@ -79,7 +78,7 @@ class MalmoMazeEnv(gym.Env):
         self.my_mission_record.recordObservations()
         # Create ClientPool
         self.pool = MalmoPython.ClientPool()
-        client_info = MalmoPython.ClientInfo('127.0.0.1', CLIENT_PORT)
+        client_info = MalmoPython.ClientInfo('127.0.0.1', client_port)
         self.pool.add(client_info)
 
     """
@@ -104,7 +103,7 @@ class MalmoMazeEnv(gym.Env):
         # Wait till mission begins
         world_state = self.agent_host.getWorldState()
         while not world_state.has_mission_begun:
-            time.sleep(TIME_WAIT * self.millisec_per_tick / 20)
+            time.sleep(self.time_wait * self.millisec_per_tick / 20)
             world_state = self.agent_host.getWorldState()
         # Get reward, done, and frame
         frame, _, _ = self._process_state(False)
@@ -124,13 +123,14 @@ class MalmoMazeEnv(gym.Env):
 
     def step(self, action):
         # Take corresponding actions
-        """ none:0, move:1, right:2, left:3 """
-        if self.action_space[action] == "move":
-            self.agent_host.sendCommand("move 1")
-        elif self.action_space[action] == "right":
-            self.agent_host.sendCommand("turn 1")
-        elif self.action_space[action] == "left":
-            self.agent_host.sendCommand("turn -1")
+        """ Available sendCommand() commands:
+            move: walks forwards/backward
+              0 -> Nothing, 1 -> Forward, -1 -> Backwards
+            strafe: walks left/right
+              0 -> Nothing, 1 -> Right, -1 -> Left
+            turn: turns the camera left/right without moving
+              0 -> Nothing, 1 -> Right, -1 -> Left """
+        self.agent_host.sendCommand(self.action_space[action])
 
         # Get reward, done, and frame
         frame, reward, done = self._process_state()
@@ -171,7 +171,7 @@ class MalmoMazeEnv(gym.Env):
         loop = 0
         while True:
             # get world state
-            time.sleep(TIME_WAIT * self.millisec_per_tick / 20)
+            time.sleep(self.time_wait * self.millisec_per_tick / 20)
             world_state = self.agent_host.getWorldState()
             # reward (loop till command's rewards are all retrieved)
             if (not reward_flag) and (world_state.number_of_rewards_since_last_state > 0):
@@ -193,7 +193,7 @@ class MalmoMazeEnv(gym.Env):
                 break;
             # exit when MAX_LOOP exceeds
             loop = loop + 1
-            if loop > MAX_LOOP:
+            if loop > self.max_loop:
                 reward = None
                 break;
         return frame, reward, done
@@ -205,7 +205,7 @@ class MalmoMazeEnv(gym.Env):
         loop = 0
         while True:
             # get next world state
-            time.sleep(TIME_WAIT * self.millisec_per_tick / 5)
+            time.sleep(self.time_wait * self.millisec_per_tick / 5)
             world_state = self.agent_host.getWorldState()
             # reward (loop till command's rewards are all retrieved)
             if reward_flag and not (world_state.number_of_rewards_since_last_state > 0):

@@ -6,17 +6,6 @@ from yaml_config_wrapper import Configuration
 from RLcraft import MalmoMazeEnv
 
 
-def create_env(config):
-    """ Create a custom OpenAI gym environment (custom MalmoMazeEnv). """
-    xml = Path(config["mission_file"]).read_text()
-    env = MalmoMazeEnv(
-        xml=xml,
-        width=config["width"],
-        height=config["height"],
-        millisec_per_tick=config["millisec_per_tick"])
-    return env
-
-
 def get_args():
     parser = argparse.ArgumentParser()
     # Required Args

@@ -118,7 +118,7 @@ class MalmoMazeEnv(gym.Env):
             time.sleep(self.time_wait * self.millisec_per_tick / 20)
             world_state = self.agent_host.getWorldState()
         # Get reward, done, and frame
-        frame, _, _ = self._process_state(False)
+        frame, _, _, _ = self._process_state(False)
         if frame is None:
             self.last_obs = np.zeros(self.shape, dtype=np.float32)
         else:
@@ -146,7 +146,7 @@ class MalmoMazeEnv(gym.Env):
         self.agent_host.sendCommand(self.action_space[action])
 
         # Get reward, done, and frame
-        frame, reward, done = self._process_state()
+        frame, reward, done, world_state = self._process_state()
         if reward is None:
             reward = self.step_reward
         # Clean up
@@ -163,11 +163,11 @@ class MalmoMazeEnv(gym.Env):
         # Record action history
         if self.enable_action_history:
             self.action_history.append(action)
-        return self.last_obs, reward, done, {}
+        return self.last_obs, reward, done, world_state
 
     def close(self):
         self.agent_host.sendCommand("quit")
-        _, _, _ = self._process_state()
+        _, _, _, _ = self._process_state()
         _, _ = self._comsume_state()
 
     """
@@ -209,7 +209,7 @@ class MalmoMazeEnv(gym.Env):
             if loop > self.max_loop:
                 reward = None
                 break;
-        return frame, reward, done
+        return frame, reward, done, world_state
 
     def _comsume_state(self):
         reward_flag = True

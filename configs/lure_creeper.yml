@@ -1,14 +1,15 @@
-tag: lava-maze-v1
+tag: lure-creeper-v1
 general:
   - config:
-      name: Lava Maze
+      name: Lure Creeper
       log_path: ./logs
       checkpoint_path: ./checkpoints
       step_reward: -1
       win_reward: 85
       lose_reward: 85
       client_port: 9000  # malmo port
-      mission_timeout_ms: 300000 # This is a good timeout for the maze
+      # mission_timeout_ms: 300000 # This is a good timeout for the maze
+      mission_timeout_ms: 30000000 # temporary
       time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
       max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
       action_space:  # The order of the actions is rettained in the action space
@@ -21,9 +22,9 @@ general:
 tuner:
   - config:
       log_level: WARN
-      env: lava_maze_1
+      env: lure_creeper_1
       env_config:
-        mission_file: missions/lava_maze.xml
+        mission_file: missions/lure_creeper.xml
         width: 84
         height: 84
         millisec_per_tick: 20

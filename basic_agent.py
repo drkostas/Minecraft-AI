@@ -1,10 +1,5 @@
-import gym
-from functools import partial
 import argparse
 from pathlib import Path
-import random
-import time
-import os
 
 from yaml_config_wrapper import Configuration
 from RLcraft import MalmoMazeEnv
@@ -68,7 +63,10 @@ def main():
             height=600,
             millisec_per_tick=50,
             mazeseed=maze_seed,
-            action_space=c_general["action_space"],
+            step_reward=c_general['step_reward'],
+            win_reward=c_general['win_reward'],
+            lose_reward=c_general['lose_reward'],
+            action_space=c_general['action_space'],
             client_port=c_general['client_port'],
             time_wait=c_general['time_wait'],
             max_loop=c_general['max_loop'])

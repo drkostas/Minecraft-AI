@@ -4,19 +4,19 @@ general:
       name: Lava Maze
       log_path: ./logs
       checkpoint_path: ./checkpoints
-      terminal_reward: 85
       step_reward: -1
+      win_reward: 85
+      lose_reward: 85
       client_port: 9000  # malmo port
       time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
       max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
-      action_space:
-        0: move 0  # don't move
-        1: move 1  # move forward
-        2: move -1  # move backward
-        3: strafe 1  # move right
-        4: strafe -1  # move left
-        5: turn 1  # turn right
-        6: turn -1  # turn left
+      action_space:  # The order of the actions is rettained in the action space
+        - move 1  # move forward
+        - move -1  # move backward
+        - strafe 1  # move right
+        - strafe -1  # move left
+        - turn 1  # turn right
+        - turn -1  # turn left
 tuner:
   - config:
       log_level: WARN

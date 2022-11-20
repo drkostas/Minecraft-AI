@@ -7,7 +7,7 @@ import numpy as np
 
 class AgentActionSpace(gym.spaces.Discrete):
     def __init__(self, action_space):
-        actions = list(action_space.values())
+        actions = list(action_space)
         self.actions = actions
         gym.spaces.Discrete.__init__(self, len(self.actions))
 
@@ -48,6 +48,9 @@ class MalmoMazeEnv(gym.Env):
         width,
         height,
         action_space,
+        step_reward,
+        win_reward,
+        lose_reward,
         millisec_per_tick = 50,
         mazeseed = "random",
         enable_action_history=False,
@@ -64,6 +67,9 @@ class MalmoMazeEnv(gym.Env):
         self.millisec_per_tick = millisec_per_tick
         self.mazeseed = mazeseed
         self.enable_action_history = enable_action_history
+        self.step_reward = step_reward
+        self.win_reward = win_reward
+        self.lose_reward = lose_reward
         self.time_wait = time_wait
         self.max_loop = max_loop
         # load action space
@@ -92,7 +98,10 @@ class MalmoMazeEnv(gym.Env):
             PLACEHOLDER_MSPERTICK=self.millisec_per_tick,
             PLACEHOLDER_WIDTH=self.width,
             PLACEHOLDER_HEIGHT=self.height,
-            PLACEHOLDER_MAZESEED=self.mazeseed)
+            PLACEHOLDER_MAZESEED=self.mazeseed,
+            PLACEHOLDER_STEP_REWARD=self.step_reward,
+            PLACEHOLDER_WIN_REWARD=self.win_reward,
+            PLACEHOLDER_LOSE_REWARD=self.lose_reward)
         my_mission = MalmoPython.MissionSpec(xml,True)
         # Start mission
         self.agent_host.startMission(my_mission,
@@ -130,12 +139,13 @@ class MalmoMazeEnv(gym.Env):
               0 -> Nothing, 1 -> Right, -1 -> Left
             turn: turns the camera left/right without moving
               0 -> Nothing, 1 -> Right, -1 -> Left """
+              
         self.agent_host.sendCommand(self.action_space[action])
 
         # Get reward, done, and frame
         frame, reward, done = self._process_state()
         if reward is None:
-            reward = 0
+            reward = self.step_reward
         # Clean up
         if done:
             frame2, reward2 = self._comsume_state()
@@ -202,7 +212,6 @@ class MalmoMazeEnv(gym.Env):
         reward_flag = True
         reward = 0
         frame = None
-        loop = 0
         while True:
             # get next world state
             time.sleep(self.time_wait * self.millisec_per_tick / 5)

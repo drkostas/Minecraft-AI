@@ -8,6 +8,7 @@ general:
       win_reward: 85
       lose_reward: 85
       client_port: 9000  # malmo port
+      mission_timeout_ms: 300000
       time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
       max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
       action_space:  # The order of the actions is rettained in the action space

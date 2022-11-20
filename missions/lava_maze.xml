@@ -38,7 +38,7 @@
         <AllowDiagonalMovement>false</AllowDiagonalMovement>
       </MazeDecorator>
 
-      <ServerQuitFromTimeUp timeLimitMs="300000" description="out_of_time"/>
+      <ServerQuitFromTimeUp timeLimitMs="{PLACEHOLDER_MISSION_TIMEOUT_MS}" description="out_of_time"/>
       <ServerQuitWhenAnyAgentFinishes/>
     </ServerHandlers>
   </ServerSection>

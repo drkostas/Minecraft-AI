@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+import random
 
 from yaml_config_wrapper import Configuration
 from RLcraft import MalmoMazeEnv
@@ -63,6 +64,7 @@ def main():
             height=600,
             millisec_per_tick=50,
             mazeseed=maze_seed,
+            mission_timeout_ms=c_general['mission_timeout_ms'],
             step_reward=c_general['step_reward'],
             win_reward=c_general['win_reward'],
             lose_reward=c_general['lose_reward'],

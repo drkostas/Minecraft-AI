@@ -51,6 +51,7 @@ class MalmoMazeEnv(gym.Env):
         step_reward,
         win_reward,
         lose_reward,
+        mission_timeout_ms,
         millisec_per_tick = 50,
         mazeseed = "random",
         enable_action_history=False,
@@ -67,6 +68,7 @@ class MalmoMazeEnv(gym.Env):
         self.millisec_per_tick = millisec_per_tick
         self.mazeseed = mazeseed
         self.enable_action_history = enable_action_history
+        self.mission_timeout_ms = mission_timeout_ms
         self.step_reward = step_reward
         self.win_reward = win_reward
         self.lose_reward = lose_reward
@@ -101,7 +103,8 @@ class MalmoMazeEnv(gym.Env):
             PLACEHOLDER_MAZESEED=self.mazeseed,
             PLACEHOLDER_STEP_REWARD=self.step_reward,
             PLACEHOLDER_WIN_REWARD=self.win_reward,
-            PLACEHOLDER_LOSE_REWARD=self.lose_reward)
+            PLACEHOLDER_LOSE_REWARD=self.lose_reward,
+            PLACEHOLDER_MISSION_TIMEOUT_MS=self.mission_timeout_ms)
         my_mission = MalmoPython.MissionSpec(xml,True)
         # Start mission
         self.agent_host.startMission(my_mission,

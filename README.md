@@ -54,7 +54,7 @@ First, you need to install the follwioing libraries:
 
 1. Now you need to create a conda environment and install the required python packages:
     ```ShellSession
-    conda create -n minerl python=3.8
+    conda create -n minerl python=3.6
     conda activate minerl
     pip install -r requirements.txt
     ```

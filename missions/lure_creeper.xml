@@ -34,7 +34,7 @@
         <PathBlock type="stone"/>
         <FloorBlock type="air"/>
 
-        <GapBlock type="stained_hardened_clay" height="1" heightVariance="1"/>
+        <GapBlock type="stained_hardened_clay stone stone" height="3" heightVariance="1"/>
         <GapProbability>0.1</GapProbability>
         <AllowDiagonalMovement>false</AllowDiagonalMovement>
       </MazeDecorator>

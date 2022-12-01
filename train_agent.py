@@ -15,14 +15,33 @@ from RLcraft import MalmoMazeEnv
 
 
 def create_env(config):
-    """ Create a custom OpenAI gym environment (custom MalmoMazeEnv). """
+    """ Create a custom OpenAI gym environment (custom MalmoMazeEnv). 
+        MalmoMazeEnv Required Args:
+        action_space
+        step_reward
+        win_reward
+        lose_reward
+        mission_timeout_ms
+    """
     xml = Path(config["mission_file"]).read_text()
     env = MalmoMazeEnv(
         xml=xml,
         width=config["width"],
         height=config["height"],
-        millisec_per_tick=config["millisec_per_tick"])
+        millisec_per_tick=config["millisec_per_tick"],
+        mission_timeout_ms=config['mission_timeout_ms'],
+        step_reward=config['step_reward'],
+        win_reward=config['win_reward'],
+        lose_reward=config['lose_reward'],
+        action_space=config['action_space'],
+        client_port=config['client_port'],
+        time_wait=config['time_wait'],
+        max_loop=config['max_loop'])
     return env
+
+
+def stop_check(trial_id, result):
+    return result["episode_reward_mean"] >= 85
 
 
 def get_args():
@@ -60,57 +79,16 @@ def main():
     # log_path = c_general['log_path']
     checkpoint_path = os.path.join(c_general['checkpoint_path'], c.tag)
     # terminal_reward = int(c_general['terminal_reward'])
+    print(checkpoint_path, c.tag, run_config)
 
-    run = True
-    while run:
-
-        # Generate a seed for maze
-        print("Generating new seed ...")
-        maze_seed = random.randint(1, 9999)
-
-        # Run agent with trained checkpoint
-        print("An agent is running ...")
-        tune.register_env(c.tag, create_env)
-        cls = get_trainable_cls("DQN")
-        agent = cls(env=c.tag, config=run_config)
-        # agent.optimizer.stop()
-        if os.path.exists(checkpoint_path):
-            agent.restore(checkpoint_path)
-        env1 = agent.workers.local_worker().env
-        obs = env1.reset()
-        done = False
-        total_reward = 0
-        while not done:
-            action = agent.compute_action(obs)
-            obs, reward, done, info = env1.step(action)
-            total_reward += reward
-        env1.close()
-        agent.stop()
-        print("Done with reward ", total_reward)
-
-        #
-        # Simulate same result with wide screen
-        #
-
-        xml = Path(args.mission_path).read_text()
-        env2 = MalmoMazeEnv(
-            xml=xml,
-            width=800,
-            height=600,
-            millisec_per_tick=50,
-            mazeseed=maze_seed)
-        env2.reset()
-        print("The world is loaded.")
-        print("Press Enter and F5 key in Minecraft to show third-person view.")
-        input("Enter keyboard to start simulation")
-        for action in env1.action_history:
-            time.sleep(0.5)
-            obs, reward, done, info = env2.step(action)
-        user_choice = input("Enter 'N' to exit [Y/n]: ").lower()
-        if user_choice in ['n', 'no']:
-            run = False
-        env2.close()
-
+    tune.register_env(c.tag, create_env)
+    ray.init()
+    tune.run(run_or_experiment="DQN",
+             config=run_config,
+             stop=stop_check,
+             checkpoint_freq=1,
+             checkpoint_at_end=True,
+             local_dir=c_general['log_path'])
     ray.shutdown()
 
 

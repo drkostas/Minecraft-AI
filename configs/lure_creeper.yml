@@ -8,7 +8,7 @@ general:
 tuner:
   - config:
       log_level: WARN
-      env: lure_creeper_1
+      env: lure-creeper-v1
       env_config:
         client_port: 9000  # malmo port
         mission_file: missions/lure_creeper.xml

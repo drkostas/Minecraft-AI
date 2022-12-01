@@ -7,10 +7,10 @@ general:
 tuner:
   - config:
       log_level: WARN
-      env: lava_maze_1
+      env: lava-maze-v1
       env_config:
-        client_port: 9000  # malmo port
         mission_file: missions/lava_maze.xml
+        client_port: 9000  # malmo port
         width: 84
         height: 84
         millisec_per_tick: 20

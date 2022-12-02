@@ -57,7 +57,8 @@ class MalmoMazeEnv(gym.Env):
         enable_action_history=False,
         client_port=5000,
         time_wait=0.1,
-        max_loop=50):
+        max_loop=50,
+        name='test1'):
         # Set up gym.Env
         super(MalmoMazeEnv, self).__init__()
         # Initialize self variables
@@ -74,6 +75,7 @@ class MalmoMazeEnv(gym.Env):
         self.lose_reward = lose_reward
         self.time_wait = time_wait
         self.max_loop = max_loop
+        self.name=name
         # load action space
         self.action_space = AgentActionSpace(action_space)
         # frame
@@ -111,7 +113,7 @@ class MalmoMazeEnv(gym.Env):
             self.pool,
             self.my_mission_record,
             0,
-            'test1')
+            self.name)
         # Wait till mission begins
         world_state = self.agent_host.getWorldState()
         while not world_state.has_mission_begun:

@@ -144,6 +144,10 @@ dmypy.json
 *.zip
 *.7z
 
+# Malmo folder (should be downloaded manually)
+MalmoPlatform
+
 # Custom
 .DS_Store
 tmp*
+logs

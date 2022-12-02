@@ -30,7 +30,7 @@
         <Seed>{PLACEHOLDER_MAZESEED}</Seed>
         <SizeAndPosition width="10" length="15" height="10" xOrigin="-32" yOrigin="69" zOrigin="-5"/>
         <StartBlock type="emerald_block" fixedToEdge="true"/>
-        <EndBlock type="redstone_block" fixedToEdge="true"/>
+        <EndBlock type="beacon" fixedToEdge="true"/>
         <PathBlock type="stone"/>
         <FloorBlock type="air"/>
 

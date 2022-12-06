@@ -10,6 +10,7 @@ lxml
 pillow
 jupyter==1.0.0
 yaml-config-wrapper==1.0.4
+GPUtil
 --extra-index-url https://test.pypi.org/simple/
 malmo==0.36.0
 

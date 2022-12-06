@@ -49,8 +49,8 @@ def main():
         xml = Path(run_config["env_config"]["mission_file"]).read_text()
         env = MalmoMazeEnv(
             xml=xml,
-            width=800,
-            height=600,
+            width=400,
+            height=300,
             millisec_per_tick=50,
             mazeseed=maze_seed,
             mission_timeout_ms=c_general['mission_timeout_ms'],
@@ -62,7 +62,7 @@ def main():
             time_wait=c_general['time_wait'],
             max_loop=c_general['max_loop'])
         print("Resetting environment ...")
-        env.reset()
+        print(env.reset())
         print("The world is loaded.")
         print("Press Enter and F5 key in Minecraft to show third-person view.")
         input("Press any key to start simulation")
@@ -71,6 +71,8 @@ def main():
             action = env.action_space.sample()
             # Actions: 0 -> move (frwd), 1 -> right, 2 -> left
             obs, reward, done, info = env.step(action)
+            done = True
+            print(len(obs))
             # obs is a numpy array of shape (height, width, 3)
             env.render()
         user_choice = input("Enter 'N' to exit, 'Y' to run new episode [Y/n]: ").lower()

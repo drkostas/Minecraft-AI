@@ -1,16 +1,16 @@
-tag: lava-maze-v1
+tag: mazes-v1
 general:
   - config:
-      name: Lava Maze
+      name: Mazes
       log_path: ./logs
       checkpoint_path: ./checkpoints
 tuner:
   - config:
       log_level: WARN
-      env: lava-maze-v1
+      env: mazes-v1
       env_config:
-        mission_file: missions/lava_maze.xml
-        client_port: 9000  # malmo port
+        mission_file: missions/mazes/maze*.xml
+        client_port: 7771  # malmo port
         width: 84
         height: 84
         millisec_per_tick: 20

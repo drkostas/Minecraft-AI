@@ -42,8 +42,8 @@
         <AgentHandlers>
             <ObservationFromFullStats/>
             <VideoProducer want_depth="false">
-                <Width>640</Width>
-                <Height>480</Height>
+                <Width>{PLACEHOLDER_WIDTH}</Width>
+                <Height>{PLACEHOLDER_HEIGHT}</Height>
             </VideoProducer>
             <ContinuousMovementCommands turnSpeedDegs="720">
                 <ModifierList type="deny-list">

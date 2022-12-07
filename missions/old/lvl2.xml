@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Level2: Bridge jumping -->
+
+<Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <About>
+        <Summary>$(ENV_NAME)</Summary>
+    </About>
+
+    <ModSettings>
+        <MsPerTick>50</MsPerTick>    
+    </ModSettings>
+
+    <ServerSection>
+        <ServerInitialConditions>
+            <Time>
+                <StartTime>6000</StartTime>
+                <AllowPassageOfTime>true</AllowPassageOfTime>
+            </Time>
+            <Weather>clear</Weather>
+            <AllowSpawning>false</AllowSpawning>
+        </ServerInitialConditions>
+        <ServerHandlers>
+            <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
+            <DrawingDecorator>
+                <!-- coordinates for cuboid are inclusive -->
+                <DrawCuboid x1="-2" y1="45" z1="-2" x2="7" y2="50" z2="18" type="air" />            <!-- limits of our arena -->
+                <DrawCuboid x1="-2" y1="44" z1="-2" x2="7" y2="44" z2="18" type="lava" />           <!-- lava floor -->
+                <DrawCuboid x1="1"  y1="45" z1="1"  x2="3" y2="45" z2="3" type="sandstone" />      <!-- floor of the arena 1-->
+                <DrawCuboid x1="1"  y1="45" z1="6"  x2="3" y2="45" z2="7" type="sandstone" />      <!-- floor of the arena 2-->
+                <DrawCuboid x1="1"  y1="45" z1="11"  x2="3" y2="45" z2="12" type="sandstone" />     <!-- floor of the arena 3-->
+                <DrawCuboid x1="2"  y1="45" z1="4"  x2="2" y2="45" z2="4" type="sandstone" />      <!-- bridge1 -->
+                <DrawCuboid x1="2"  y1="45" z1="8"  x2="2" y2="45" z2="9" type="sandstone" />      <!-- bridge2 -->
+
+                <DrawBlock   x="4"   y="45"  z="1"  type="cobblestone" />                           <!-- the starting marker -->
+                <DrawBlock   x="4"   y="45"  z="12" type="diamond_block" />                           <!-- the destination marker -->
+                <DrawItem    x="4"   y="46"  z="12" type="diamond" />                               <!-- another destination marker -->
+            </DrawingDecorator>
+
+            <NavigationDecorator>
+                <randomPlacementProperties>
+                    <origin x="4" y="45" z="12"></origin>
+                    <maxRandomizedRadius>1</maxRandomizedRadius>
+                    <minRandomizedRadius>0</minRandomizedRadius>
+                    <maxRadius>1</maxRadius>
+                    <minRadius>0</minRadius>
+                    <block>diamond_block</block>
+                    <placement>circle</placement>
+                </randomPlacementProperties>
+                <minRandomizedDistance>0</minRandomizedDistance>
+                <maxRandomizedDistance>1</maxRandomizedDistance>
+                <randomizeCompassLocation>false</randomizeCompassLocation>
+            </NavigationDecorator>
+            <ServerQuitFromTimeUp timeLimitMs="60000" description="out_of_time"/>
+            <ServerQuitWhenAnyAgentFinishes/>
+        </ServerHandlers>
+    </ServerSection>
+
+    <AgentSection mode="Survival">
+        <Name>MineRLAgent</Name>
+        <AgentStart>
+            <Placement x="4.5" y="46.0" z="1.5" pitch="30" yaw="0"/>
+            <Inventory>
+                    <InventoryObject slot="0" type="compass" quantity="1"/>
+            </Inventory>
+        </AgentStart>
+        <AgentHandlers>
+
+            <VideoProducer want_depth="false">
+                <Width>128</Width>
+                <Height>96</Height>
+            </VideoProducer>
+            <FileBasedPerformanceProducer/>
+            
+            <ObservationFromFullInventory flat="false"/>
+            <ObservationFromFullStats/>
+            <HumanLevelCommands>
+                <ModifierList type="deny-list"> 
+                <command>moveMouse</command> 
+                <command>inventory</command> 
+                </ModifierList>
+            </HumanLevelCommands>
+            <DiscreteMovementCommands>
+                <ModifierList type="deny-list">
+                    <command>attack</command>
+                </ModifierList>
+            </DiscreteMovementCommands>
+            <!-- <CameraCommands/> -->
+            <ObservationFromCompass/>
+
+            <RewardForMissionEnd rewardForDeath="-100">
+                <Reward description="out_of_time" reward="-100" />
+            </RewardForMissionEnd>
+            <AgentQuitFromTimeUp timeLimitMs="60000" description="out_of_time" />
+            <AgentQuitFromTouchingBlockType>
+                <!-- <Block type="lava" description="drowned_in_lava"/> -->
+                <Block type="diamond_block" description="found_goal"/>
+            </AgentQuitFromTouchingBlockType>
+            <RewardForTouchingBlockType>
+                <!-- <Block reward="-100.0" type="lava" behaviour="onceOnly"/> -->
+                <Block reward="{PLACEHOLDER_LOSE_REWARD}"type="diamond_block" behaviour="onceOnly"/>
+            </RewardForTouchingBlockType>
+            <RewardForDistanceTraveledToCompassTarget rewardPerBlock="10" density="PER_TICK"/>
+            <PauseCommand/>
+        </AgentHandlers>
+    </AgentSection>
+</Mission>

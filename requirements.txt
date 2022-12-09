@@ -5,7 +5,7 @@ ray[default]==2.1.0
 ray[rllib]==2.1.0 
 ray[tune]==2.1.0 
 attrs==19.1.0 
-gym==0.19.0
+gym
 lxml
 pillow
 jupyter==1.0.0

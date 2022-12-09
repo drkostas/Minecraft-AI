@@ -49,10 +49,10 @@ def main():
 
     maze_seed = random.randint(1, 9999)
 
-    xml = Path(run_config["env_config"]["mission_file"]).read_text()
+    # xml = Path(run_config["env_config"]["mission_file"]).read_text()
     #env = MalmoMazeEnv(
     env_config = {
-        "xml":xml,
+        "xml":run_config["env_config"]["mission_file"],
         "width":320,
         "height":240,
         "millisec_per_tick":50,

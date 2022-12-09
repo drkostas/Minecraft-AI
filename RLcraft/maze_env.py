@@ -3,6 +3,7 @@ import malmo.MalmoPython as MalmoPython
 import random
 import time
 import numpy as np
+from pathlib import Path
 
 
 class AgentActionSpace(gym.spaces.Discrete):
@@ -58,11 +59,15 @@ class MalmoMazeEnv(gym.Env):
         client_port=5000,
         time_wait=0.1,
         max_loop=50,
-        name='test1'):
+        name='test1',
+        max_xml=9):
         # Set up gym.Env
         super(MalmoMazeEnv, self).__init__()
         # Initialize self variables
-        self.xml = xml
+        if '*' in xml:
+            num = random.randint(0, max_xml)
+            xml = xml.replace("*", str(num))
+        self.xml = Path(xml).read_text()
         self.height = height
         self.width = width
         self.shape = (self.height, self.width, 3)

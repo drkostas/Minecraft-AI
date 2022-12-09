@@ -1,9 +1,9 @@
 tensorflow==2.6.2 
 pandas
 numpy
-ray[default]==1.6.0 
-ray[rllib]==1.6.0 
-ray[tune]==1.6.0 
+ray[default]==2.1.0 
+ray[rllib]==2.1.0 
+ray[tune]==2.1.0 
 attrs==19.1.0 
 gym==0.19.0
 lxml

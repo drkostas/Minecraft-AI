@@ -61,7 +61,7 @@ def main():
             time_wait=run_config['time_wait'],
             max_loop=run_config['max_loop'])
         print("Resetting environment ...")
-        env.reset()
+        print(env.reset())
         print("The world is loaded.")
         print("Press Enter and F5 key in Minecraft to show third-person view.")
         input("Press any key to start simulation")
@@ -70,6 +70,8 @@ def main():
             action = env.action_space.sample()
             # Actions: 0 -> move (frwd), 1 -> right, 2 -> left
             obs, reward, done, info = env.step(action)
+            done = True
+            print(len(obs))
             # obs is a numpy array of shape (height, width, 3)
             env.render()
         user_choice = input(

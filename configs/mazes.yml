@@ -7,7 +7,6 @@ general:
       step_reward: -1
       win_reward: 85
       lose_reward: -5
-      client_port: 9000  # malmo port
       mission_timeout_ms: 300000 # This is a good timeout for the maze
       time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
       max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action

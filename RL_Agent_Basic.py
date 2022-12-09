@@ -62,7 +62,7 @@ def main():
         "win_reward":c_general['win_reward'],
         "lose_reward":c_general['lose_reward'],
         "action_space":c_general['action_space'],
-        "client_port":c_general['client_port'],
+        "client_port":run_config["env_config"]['client_port'],
         "time_wait":c_general['time_wait'],
         "max_loop":c_general['max_loop']
     }

@@ -145,7 +145,7 @@ dmypy.json
 *.7z
 
 # Malmo folder (should be downloaded manually)
-MalmoPlatform
+# MalmoPlatform
 
 # Custom
 .DS_Store

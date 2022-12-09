@@ -19,22 +19,21 @@
       <AllowSpawning>false</AllowSpawning>
     </ServerInitialConditions>
     <ServerHandlers>
-      <FlatWorldGenerator generatorString="3;1*minecraft:bedrock,7*minecraft:dirt,1*minecraft:stone;1;"/>
+      <FlatWorldGenerator generatorString="3;1*minecraft:stone,6*minecraft:iron_block;5;"/>
 
-      <DrawingDecorator>
-        <DrawSphere x="-29" y="70" z="-2" radius="100" type="air"/>
-        <DrawCuboid x1="-134" y1="170" z1="-7" x2="-124" y2="170" z2="3" type="dirt" /> 
+      <DrawingDecorator>        
+        <DrawSphere x="0" y="0" z="0" radius="0" type="air"/>
+        <DrawCuboid x1="0" x2="0" y1="0" y2="0" z1="0" z2="0" type="air" /> 
       </DrawingDecorator>
 
       <MazeDecorator>
         <Seed>{PLACEHOLDER_MAZESEED}</Seed>
-        <SizeAndPosition width="10" length="15" height="10" xOrigin="-32" yOrigin="69" zOrigin="-5"/>
+        <SizeAndPosition width="10" length="14" height="10" xOrigin="14" yOrigin="6" zOrigin="97"/>
         <StartBlock type="emerald_block" fixedToEdge="true"/>
-        <EndBlock type="redstone_block" fixedToEdge="true"/>
-        <PathBlock type="stone"/>
-        <FloorBlock type="air"/>
-
-        <GapBlock type="stained_hardened_clay stone stone" height="3" heightVariance="1"/>
+        <EndBlock type="beacon" fixedToEdge="true"/>
+        <PathBlock type="air"/>
+        <FloorBlock type="grass"/>
+        <GapBlock type="stained_hardened_clay stone" height="2" heightVariance="2"/>
         <GapProbability>0.1</GapProbability>
         <AllowDiagonalMovement>false</AllowDiagonalMovement>
       </MazeDecorator>
@@ -45,11 +44,11 @@
   </ServerSection>
 
   <AgentSection mode="Adventure">
-    <Name>AgentSteve</Name>
+    <Name>Agent0</Name>
 
     <AgentStart>
       <!-- Look down a little to see the blocks -->
-      <Placement x="-28.5" y="71.0" z="-1.5" pitch="0" yaw="0"/>
+      <Placement x="0" y="0" z="0" pitch="0" yaw="0"/>
     </AgentStart>
 
     <AgentHandlers>
@@ -68,14 +67,14 @@
       </RewardForMissionEnd>
 
       <RewardForTouchingBlockType>
-        <!-- <Block reward="{PLACEHOLDER_LOSE_REWARD}" type="lava" behaviour="onceOnly"/> -->
+        <Block reward="{PLACEHOLDER_LOSE_REWARD}" type="lava" behaviour="onceOnly"/>
         <Block reward="{PLACEHOLDER_WIN_REWARD}" type="lapis_block" behaviour="onceOnly"/>
       </RewardForTouchingBlockType>
 
       <RewardForSendingCommand reward="{PLACEHOLDER_STEP_REWARD}"/>
 
       <AgentQuitFromTouchingBlockType>
-        <!-- <Block type="lava" /> -->
+        <Block type="lava" />
         <Block type="lapis_block" />
       </AgentQuitFromTouchingBlockType>
     </AgentHandlers>

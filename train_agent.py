@@ -23,9 +23,9 @@ def create_env(config):
         lose_reward
         mission_timeout_ms
     """
-    xml = Path(config["mission_file"]).read_text()
+    
     env = MalmoMazeEnv(
-        xml=xml,
+        xml=config["mission_file"],
         width=config["width"],
         height=config["height"],
         millisec_per_tick=config["millisec_per_tick"],
@@ -41,7 +41,7 @@ def create_env(config):
 
 
 def stop_check(trial_id, result):
-    return result["episode_reward_mean"] >= 85
+    return result["episode_reward_mean"] >= 85 # Change this
 
 
 def get_args():

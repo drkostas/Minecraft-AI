@@ -1,0 +1,62 @@
+<Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <About>
+    <Summary>Lure Creeper</Summary>
+    </About>
+
+    <!-- This is replaced by the program code -->
+    <ModSettings>
+        <MsPerTick>{PLACEHOLDER_MSPERTICK}</MsPerTick>
+    </ModSettings>
+
+    <ServerSection>
+        <ServerInitialConditions>
+            <Time>
+                <StartTime>6000</StartTime>
+                <AllowPassageOfTime>false</AllowPassageOfTime>
+            </Time>
+            <Weather>clear</Weather>
+            <AllowSpawning>false</AllowSpawning>
+        </ServerInitialConditions>
+
+        <ServerHandlers>
+            <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
+
+            <DrawingDecorator>
+                <!-- coordinates for cuboid are inclusive -->
+                <DrawCuboid x1="-2" y1="46" z1="-2" x2="7" y2="50" z2="18" type="air" />            <!-- limits of our arena -->
+                <DrawCuboid x1="-2" y1="45" z1="-2" x2="7" y2="45" z2="18" type="lava" />           <!-- lava floor -->
+                <DrawCuboid x1="1"  y1="45" z1="1"  x2="3" y2="45" z2="3" type="sandstone" />      <!-- floor of the arena 1-->
+                <DrawCuboid x1="1"  y1="45" z1="6"  x2="3" y2="45" z2="7" type="sandstone" />      <!-- floor of the arena 2-->
+                <DrawCuboid x1="1"  y1="45" z1="11"  x2="3" y2="45" z2="12" type="sandstone" />     <!-- floor of the arena 3-->
+                <DrawCuboid x1="2"  y1="45" z1="4"  x2="2" y2="45" z2="5" type="sandstone" />      <!-- bridge1 -->
+                <DrawCuboid x1="2"  y1="45" z1="8"  x2="2" y2="45" z2="10" type="sandstone" />      <!-- bridge2 -->
+
+                <DrawBlock   x="4"   y="45"  z="1"  type="cobblestone" />                           <!-- the starting marker -->
+                <DrawBlock   x="4"   y="45"  z="12" type="diamond_block" />                           <!-- the destination marker -->
+                <DrawItem    x="4"   y="46"  z="12" type="diamond" />                               <!-- another destination marker -->
+            </DrawingDecorator>
+
+            
+            <ServerQuitFromTimeUp timeLimitMs="{PLACEHOLDER_MISSION_TIMEOUT_MS}" description="out_of_time"/>
+            <ServerQuitWhenAnyAgentFinishes/>
+        </ServerHandlers>
+    </ServerSection>
+
+    <AgentSection mode="Survival">
+        <Name>MineRLAgent</Name>
+        <AgentStart>
+            <Placement x="4.5" y="46.0" z="1.5" pitch="30" yaw="0"/>
+            <Inventory>
+                <InventoryObject slot="0" type="compass" quantity="1"/>
+            </Inventory>
+        </AgentStart>
+
+        <AgentHandlers>
+            <VideoProducer want_depth="false">
+                <Width>{PLACEHOLDER_WIDTH}</Width>
+                <Height>{PLACEHOLDER_HEIGHT}</Height>
+            </VideoProducer>
+
+        </AgentHandlers>
+    </AgentSection>
+</Mission>

@@ -37,30 +37,29 @@ def main():
     c_general = c.get_config('general')[0]
     c_tuner = c.get_config('tuner')[0]
     # Load the values from the config
-    run_config = c_tuner['config']
+    run_config = c_tuner['config']['env_config']
     c_general = c_general['config']
 
     run = True
     while run:
-        # Generate a seed for maze 
+        # Generate a seed for maze
         print("Generating new seed ...")
         maze_seed = random.randint(1, 9999)
         print("Loading environment ...")
-        xml = Path(run_config["env_config"]["mission_file"]).read_text()
+        xml = Path(run_config["mission_file"]).read_text()
         env = MalmoMazeEnv(
             xml=xml,
-            width=800,
-            height=600,
-            millisec_per_tick=50,
-            mazeseed=maze_seed,
-            mission_timeout_ms=c_general['mission_timeout_ms'],
-            step_reward=c_general['step_reward'],
-            win_reward=c_general['win_reward'],
-            lose_reward=c_general['lose_reward'],
-            action_space=c_general['action_space'],
-            client_port=c_general['client_port'],
-            time_wait=c_general['time_wait'],
-            max_loop=c_general['max_loop'])
+            width=run_config["width"],
+            height=run_config["height"],
+            millisec_per_tick=run_config["millisec_per_tick"],
+            mission_timeout_ms=run_config['mission_timeout_ms'],
+            step_reward=run_config['step_reward'],
+            win_reward=run_config['win_reward'],
+            lose_reward=run_config['lose_reward'],
+            action_space=run_config['action_space'],
+            client_port=run_config['client_port'],
+            time_wait=run_config['time_wait'],
+            max_loop=run_config['max_loop'])
         print("Resetting environment ...")
         env.reset()
         print("The world is loaded.")
@@ -73,11 +72,12 @@ def main():
             obs, reward, done, info = env.step(action)
             # obs is a numpy array of shape (height, width, 3)
             env.render()
-        user_choice = input("Enter 'N' to exit, 'Y' to run new episode [Y/n]: ").lower()
+        user_choice = input(
+            "Enter 'N' to exit, 'Y' to run new episode [Y/n]: ").lower()
         if user_choice.lower() in ['n', 'no']:
             run = False
         env.close()
-    
+
     print("Done.")
 
 

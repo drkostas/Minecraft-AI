@@ -61,7 +61,7 @@ class MalmoMazeEnv(gym.Env):
         max_loop=50,
         name='test1',
         client_address='127.0.0.1',
-        max_xml=9):
+        max_xml=159):
         # Set up gym.Env
         super(MalmoMazeEnv, self).__init__()
         # Initialize self variables

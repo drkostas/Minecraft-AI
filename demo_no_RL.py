@@ -2,7 +2,8 @@ import argparse
 from pathlib import Path
 import random
 import json
-
+from typing import Dict
+import time
 from yaml_config_wrapper import Configuration
 from RLcraft import MalmoMazeEnv
 
@@ -27,6 +28,28 @@ def get_args():
     args = parser.parse_args()
     return args
 
+
+def create_env(config: Dict):
+    """ Create a custom OpenAI gym environment (custom MalmoMazeEnv).
+    """
+    maze_seed = random.randint(1, 9999)
+    env = MalmoMazeEnv(
+            mazeseed=maze_seed,
+            xml=config["xml"],
+            width=config["width"],
+            height=config["height"],
+            millisec_per_tick=config['millisec_per_tick'],
+            mission_timeout_ms=config['mission_timeout_ms'],
+            step_reward=config['step_reward'],
+            win_reward=config['win_reward'],
+            lose_reward=config['lose_reward'],
+            action_space=config['action_space'],
+            client_port=config['client_port'],
+            time_wait=config['time_wait'],
+            max_loop=config['max_loop'])
+    return env
+
+
 def process_obs(np_obs, info):
     """ Process the observation from the environment. """
     # obs is a numpy array of shape (height, width, 3)
@@ -38,7 +61,7 @@ def process_obs(np_obs, info):
     ypos_data = info_obs['YPos']
     zpos_data = info_obs['ZPos']
     yaw_data = info_obs['Yaw']  # where the player is facing
-    xp_data = info_obs['XP']
+    hp_data = info_obs['Life']
     obs = {}
     obs['rgb'] = np_obs
     obs['floor'] = floor_data
@@ -47,8 +70,9 @@ def process_obs(np_obs, info):
     obs['ypos'] = ypos_data
     obs['zpos'] = zpos_data
     obs['yaw'] = yaw_data
-    obs['xp'] = xp_data
+    obs['hp'] = hp_data
     return obs
+
 
 def main():
     """ Run a the game with a random agent. """
@@ -57,33 +81,14 @@ def main():
     # Load YML config file
     c = Configuration(config_src=args.config_file)
     # Load configs from config class
-    c_general = c.get_config('general')[0]
-    c_tuner = c.get_config('tuner')[0]
-    # Load the values from the config
-    run_config = c_tuner['config']
-    env_config = run_config['env_config']
-    c_general = c_general['config']
+    general_config = c.get_config('general')
+    train_config = c.get_config('train')[0]['config']
+    env_config = train_config['env_config']
 
     run = True
     while run:
-        # Generate a seed for maze
-        print("Generating new seed ...")
-        maze_seed = random.randint(1, 9999)
         print("Loading environment ...")
-        env = MalmoMazeEnv(
-            width=env_config["width"],
-            height=env_config["height"],
-            mazeseed=maze_seed,
-            xml=env_config["mission_file"],
-            millisec_per_tick=env_config['millisec_per_tick'],
-            max_loop=c_general['max_loop'],
-            mission_timeout_ms=c_general['mission_timeout_ms'],
-            step_reward=c_general['step_reward'],
-            win_reward=c_general['win_reward'],
-            lose_reward=c_general['lose_reward'],
-            action_space=c_general['action_space'],
-            client_port=env_config['client_port'],
-            time_wait=c_general['time_wait'])
+        env = create_env(env_config)
         print("Resetting environment ...")
         print(env.reset())
         print("The world is loaded.")
@@ -102,6 +107,8 @@ def main():
             "Enter 'N' to exit, 'Y' to run new episode [Y/n]: ").lower()
         if user_choice.lower() in ['n', 'no']:
             run = False
+        else:
+            time.sleep(5)
         env.close()
 
     print("Done.")

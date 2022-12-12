@@ -1,15 +1,11 @@
-
-    <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
                   <About>
                     <Summary>Survive the farm fire!</Summary>
                   </About>
-
                   <ModSettings>
                       <MsPerTick>{PLACEHOLDER_MSPERTICK}</MsPerTick>
                   </ModSettings>
-
                   <ServerSection>
                     <ServerInitialConditions>
                       <Time>
@@ -20,32 +16,30 @@
                       <AllowSpawning>true</AllowSpawning>
                     </ServerInitialConditions>
                     <ServerHandlers>
-
                       <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
                       <DrawingDecorator>
                           <DrawCuboid x1="0" y1="226" z1="0" x2="6" y2="246" z2="6" type="netherrack"/>
-<DrawCuboid x1="1" y1="227" z1="1" x2="5" y2="246" z2="5" type="air"/>
-<DrawCuboid x1="1" y1="227" z1="1" x2="5" y2="227" z2="5" type="sea_lantern"/>
-<DrawCuboid x1="1" y1="227" z1="1" x2="1" y2="227" z2="1" type="carpet"/>
-<DrawCuboid x1="2" y1="227" z1="1" x2="2" y2="227" z2="1" type="carpet"/>
-<DrawCuboid x1="3" y1="227" z1="1" x2="3" y2="227" z2="1" type="carpet"/>
-<DrawCuboid x1="4" y1="227" z1="1" x2="4" y2="227" z2="1" type="carpet"/>
-<DrawCuboid x1="5" y1="227" z1="1" x2="5" y2="227" z2="1" type="carpet"/>
-<DrawCuboid x1="1" y1="227" z1="2" x2="1" y2="227" z2="2" type="carpet"/>
-<DrawCuboid x1="3" y1="227" z1="2" x2="3" y2="227" z2="2" type="carpet"/>
-<DrawCuboid x1="1" y1="227" z1="3" x2="1" y2="227" z2="3" type="carpet"/>
-<DrawCuboid x1="2" y1="227" z1="3" x2="2" y2="227" z2="3" type="carpet"/>
-<DrawCuboid x1="3" y1="227" z1="3" x2="3" y2="227" z2="3" type="carpet"/>
-<DrawCuboid x1="4" y1="227" z1="3" x2="4" y2="227" z2="3" type="carpet"/>
-<DrawCuboid x1="5" y1="227" z1="3" x2="5" y2="227" z2="3" type="carpet"/>
-<DrawCuboid x1="5" y1="227" z1="4" x2="5" y2="227" z2="4" type="carpet"/>
-<DrawCuboid x1="1" y1="227" z1="5" x2="1" y2="227" z2="5" type="carpet"/>
-<DrawCuboid x1="2" y1="227" z1="5" x2="2" y2="227" z2="5" type="carpet"/>
-<DrawCuboid x1="3" y1="227" z1="5" x2="3" y2="227" z2="5" type="carpet"/>
-<DrawCuboid x1="4" y1="227" z1="5" x2="4" y2="227" z2="5" type="carpet"/>
-<DrawCuboid x1="5" y1="227" z1="5" x2="5" y2="227" z2="5" type="carpet"/>
-<DrawCuboid x1="1" y1="227" z1="3" x2="1" y2="229" z2="3" type="emerald_block"/>
-
+                          <DrawCuboid x1="1" y1="227" z1="1" x2="5" y2="246" z2="5" type="air"/>
+                          <DrawCuboid x1="1" y1="227" z1="1" x2="5" y2="227" z2="5" type="sea_lantern"/>
+                          <DrawCuboid x1="1" y1="227" z1="1" x2="1" y2="227" z2="1" type="carpet"/>
+                          <DrawCuboid x1="2" y1="227" z1="1" x2="2" y2="227" z2="1" type="carpet"/>
+                          <DrawCuboid x1="3" y1="227" z1="1" x2="3" y2="227" z2="1" type="carpet"/>
+                          <DrawCuboid x1="4" y1="227" z1="1" x2="4" y2="227" z2="1" type="carpet"/>
+                          <DrawCuboid x1="5" y1="227" z1="1" x2="5" y2="227" z2="1" type="carpet"/>
+                          <DrawCuboid x1="1" y1="227" z1="2" x2="1" y2="227" z2="2" type="carpet"/>
+                          <DrawCuboid x1="3" y1="227" z1="2" x2="3" y2="227" z2="2" type="carpet"/>
+                          <DrawCuboid x1="1" y1="227" z1="3" x2="1" y2="227" z2="3" type="carpet"/>
+                          <DrawCuboid x1="2" y1="227" z1="3" x2="2" y2="227" z2="3" type="carpet"/>
+                          <DrawCuboid x1="3" y1="227" z1="3" x2="3" y2="227" z2="3" type="carpet"/>
+                          <DrawCuboid x1="4" y1="227" z1="3" x2="4" y2="227" z2="3" type="carpet"/>
+                          <DrawCuboid x1="5" y1="227" z1="3" x2="5" y2="227" z2="3" type="carpet"/>
+                          <DrawCuboid x1="5" y1="227" z1="4" x2="5" y2="227" z2="4" type="carpet"/>
+                          <DrawCuboid x1="1" y1="227" z1="5" x2="1" y2="227" z2="5" type="carpet"/>
+                          <DrawCuboid x1="2" y1="227" z1="5" x2="2" y2="227" z2="5" type="carpet"/>
+                          <DrawCuboid x1="3" y1="227" z1="5" x2="3" y2="227" z2="5" type="carpet"/>
+                          <DrawCuboid x1="4" y1="227" z1="5" x2="4" y2="227" z2="5" type="carpet"/>
+                          <DrawCuboid x1="5" y1="227" z1="5" x2="5" y2="227" z2="5" type="carpet"/>
+                          <DrawCuboid x1="1" y1="227" z1="3" x2="1" y2="229" z2="3" type="emerald_block"/>
                           <DrawCuboid x1="1" y1="227" z1="1" x2="1" y2="227" z2="1" type="fire"/>
                           <DrawCuboid x1="0" y1="227" z1="6" x2="6" y2="246" z2="6" type="beacon"/>
                           <DrawCuboid x1="0" y1="227" z1="0" x2="6" y2="246" z2="0" type="beacon"/>
@@ -57,7 +51,6 @@
                       <ServerQuitFromTimeUp timeLimitMs="{PLACEHOLDER_MISSION_TIMEOUT_MS}"/>
                     </ServerHandlers>
                   </ServerSection>
-
                   <AgentSection mode="Survival">
                       <Name>Survivor</Name>
                       <AgentStart>
@@ -83,12 +76,12 @@
                               </Grid>
                           </ObservationFromGrid>
                           <RewardForTouchingBlockType>
-                              <Block reward="{PLACEHOLDER_LOSE_REWARD}"type="emerald_block"/>
-                              <Block reward="-50.0" type="fire"/>
+                              <Block reward="{PLACEHOLDER_WIN_REWARD}" type="emerald_block"/>
+                              <Block reward="{PLACEHOLDER_STEP_REWARD}" type="fire"/>
     
                           </RewardForTouchingBlockType>
                           <RewardForSendingCommand reward="-1"/>
-                          <RewardForMissionEnd rewardForDeath="-10.0">
+                          <RewardForMissionEnd rewardForDeath="{PLACEHOLDER_LOSE_REWARD}">
                               <Reward description="found_goal" reward="{PLACEHOLDER_WIN_REWARD}"/>
                               <Reward description="out_of_time" reward="{PLACEHOLDER_LOSE_REWARD}"/>
                           </RewardForMissionEnd>
@@ -97,4 +90,4 @@
                           </AgentQuitFromTouchingBlockType>
                       </AgentHandlers>
                   </AgentSection>
-                </Mission> 
+</Mission> 

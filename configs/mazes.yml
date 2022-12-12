@@ -23,7 +23,7 @@ tuner:
       env: mazes-v1
       env_config:
         mission_file: missions/mazes/maze*.xml
-        client_port: 9000  # malmo port
+        client_port: 10000  # malmo port
         width: 84
         height: 84
         millisec_per_tick: 20

@@ -1,42 +1,110 @@
 tag: mazes-v1
 general:
+  config:
+    name: Mazes
+    log_path: ./logs
+    checkpoint_path: ./checkpoints
+    save_freq: 5
+    train_epochs: 30
+train:  # Every config is a different training agent
+  # --- Agent 1 --- #
   - config:
-      name: Mazes
-      log_path: ./logs
-      checkpoint_path: ./checkpoints
-      step_reward: -1
-      win_reward: 85
-      lose_reward: -5
-      client_port: 9000  # malmo port
-      mission_timeout_ms: 300000 # This is a good timeout for the maze
-      time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
-      max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
-      action_space:  # The order of the actions is rettained in the action space
-        - move 1  # move forward
-        - move -1  # move backward
-        - strafe 1  # move right
-        - strafe -1  # move left
-        - turn 1  # turn right
-        - turn -1  # turn left
-tuner:
-  - config:
-      log_level: WARN
-      env: mazes-v1
       env_config:
-        mission_file: missions/mazes/maze*.xml
-        client_port: 10000  # malmo port
+        xml: missions/mazes/maze*.xml
         width: 84
         height: 84
-        millisec_per_tick: 20
-      framework: tf
-      num_gpus: 0
+        millisec_per_tick: 50
+        maze_seed: 1  # will be replaced by the code
+        mission_timeout_ms: 300000 # This is a good timeout for the maze
+        step_reward: -1
+        win_reward: 85
+        lose_reward: -100
+        action_space:  # The order of the actions is rettained in the action space
+          - move 1  # move forward
+          - move -1  # move backward
+          - strafe 1  # move right
+          - strafe -1  # move left
+          - turn 1  # turn right
+          - turn -1  # turn left
+        client_port: 10000  # malmo port
+        time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
+        max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
       num_workers: 1
-      double_q: True
-      dueling: True
-      explore: True
-      exploration_config:
-        type: EpsilonGreedy
-        initial_epsilon: 1.0
-        final_epsilon: 0.02
-        epsilon_timesteps: 100
-    type: ray
+      framework: tf
+      model:
+        fcnet_hiddens:
+          - 64
+          - 64
+        conv_filters: null  # will be replaced by the code
+        fcnet_activation: relu
+        grayscale: True
+        evaluation_num_workers: 1
+        disable_env_checking: True
+        evaluation_config:
+          render_env: False
+  # --- Agent 2 --- # [No Turning left or right]
+  - config:
+      env_config:
+        xml: missions/mazes/maze*.xml
+        width: 84
+        height: 84
+        millisec_per_tick: 50
+        maze_seed: 1  # will be replaced by the code
+        mission_timeout_ms: 300000 # This is a good timeout for the maze
+        step_reward: -1
+        win_reward: 85
+        lose_reward: -100
+        action_space:  # The order of the actions is rettained in the action space
+          - move 1  # move forward
+          - move -1  # move backward
+          - strafe 1  # move right
+          - strafe -1  # move left
+        client_port: 10000  # malmo port
+        time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
+        max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
+      num_workers: 1
+      framework: tf
+      model:
+        fcnet_hiddens:
+          - 64
+          - 64
+        conv_filters: null  # will be replaced by the code
+        fcnet_activation: relu
+        grayscale: True
+        evaluation_num_workers: 1
+        disable_env_checking: True
+        evaluation_config:
+          render_env: False
+  # --- Agent 3 --- # [No side ways moving (should turn instead)]
+  - config:
+      env_config:
+        xml: missions/mazes/maze*.xml
+        width: 84
+        height: 84
+        millisec_per_tick: 50
+        maze_seed: 1  # will be replaced by the code
+        mission_timeout_ms: 300000 # This is a good timeout for the maze
+        step_reward: -1
+        win_reward: 85
+        lose_reward: -100
+        action_space:  # The order of the actions is rettained in the action space
+          - move 1  # move forward
+          - move -1  # move backward
+          - turn 1  # turn right
+          - turn -1  # turn left
+        client_port: 10000  # malmo port
+        time_wait: 0.05  # time to wait for retreiving world state (when MsPerTick=20)
+        max_loop: 50  # wait till TIME_WAIT * MAX_LOOP seconds for each action
+      num_workers: 1
+      framework: tf
+      model:
+        fcnet_hiddens:
+          - 64
+          - 64
+        conv_filters: null  # will be replaced by the code
+        fcnet_activation: relu
+        grayscale: True
+        evaluation_num_workers: 1
+        disable_env_checking: True
+        evaluation_config:
+          render_env: False

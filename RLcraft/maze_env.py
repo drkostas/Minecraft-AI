@@ -60,7 +60,8 @@ class MalmoMazeEnv(gym.Env):
         time_wait=0.1,
         max_loop=50,
         name='test1',
-        max_xml=9):
+        client_address='127.0.0.1',
+        max_xml=159):
         # Set up gym.Env
         super(MalmoMazeEnv, self).__init__()
         # Initialize self variables
@@ -93,7 +94,7 @@ class MalmoMazeEnv(gym.Env):
         self.my_mission_record.recordObservations()
         # Create ClientPool
         self.pool = MalmoPython.ClientPool()
-        client_info = MalmoPython.ClientInfo('127.0.0.1', client_port)
+        client_info = MalmoPython.ClientInfo(client_address, client_port)
         self.pool.add(client_info)
 
     """

@@ -10,8 +10,12 @@ from RLcraft import MalmoMazeEnv
 import numpy as np
 import os
 import time
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
 from PIL import Image
+=======
+import pickle
+>>>>>>> f6b8e26e31682f3fb87c5dc17647e8ca3003f175
 #from ray.rllib.agents.ppo import PPO
 from sklearn.decomposition import PCA
 
@@ -217,14 +221,14 @@ def main():
         # Create checkpoint directory
         save_freq = general_config['save_freq']
         checkpoint_path = os.path.join(general_config['checkpoint_path'], train_name)
+        log_path = os.path.join(general_config['log_path'], train_name)
         os.makedirs(checkpoint_path, exist_ok=True)
-
+        os.makedirs(log_path, exist_ok=True)
         #env = CustomEnv(env_config)
         #env.reset()
 
         #print("test")
         #time.sleep(5)
-
 
         # Create the environment
         algo = PPO(env=CustomEnv, config=train_config)
@@ -240,13 +244,23 @@ def main():
             info = algo.train()  # TODO: Is the info the output of the step?
 
             if epoch % save_freq == 0:
-                print(f"Ran {(time.time()-start_time)/60:0.1f} minutes")
-                last_eval = time.time()
                 algo.save_checkpoint(checkpoint_path)
 
                 print(f"Checkpoint saved.")
                 print(f"{(time.time()-start_time)/60:0.1f} minutes elapsed.")
                 # TODO: Also print the average, min, max reward, (and loss??)
+                with open(f'{log_path}/epoch{epoch}.pkl', 'wb') as f:
+                    pickle.dump(info, f)
+                print(f"Checkpoint saved (epoch {epoch} - {(time.time()-start_time)/60:0.1f} minutes elapsed).")
+        # Save data for final epoch just to be safe
+        algo.save_checkpoint(checkpoint_path)
+        print(f"Final Checkpoint saved.")
+        print(f"{(time.time()-start_time)/60:0.1f} minutes elapsed.")
+        # TODO: Also print the average, min, max reward, (and loss??)
+        with open(f'{log_path}/epoch{epoch}.pkl', 'wb') as f:
+            pickle.dump(info, f)
+        print(f"Final Log saved.")
+        print(f"Total time elapsed: {(time.time()-start_time)/60:0.1f} minutes.")
 
 
 if __name__ == '__main__':

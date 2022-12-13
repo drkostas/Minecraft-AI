@@ -10,12 +10,11 @@ from RLcraft import MalmoMazeEnv
 import numpy as np
 import os
 import time
-<<<<<<< HEAD
 import matplotlib.pyplot as plt
 from PIL import Image
-=======
+
 import pickle
->>>>>>> f6b8e26e31682f3fb87c5dc17647e8ca3003f175
+
 #from ray.rllib.agents.ppo import PPO
 from sklearn.decomposition import PCA
 

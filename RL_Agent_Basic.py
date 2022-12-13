@@ -20,27 +20,28 @@ class CustomEnv(gym.Env):
     def __init__(self, config: Dict):
         # Set a random seed for the environment
         maze_seed = random.randint(1, 9999)
-        config['env_config']['mazeseed'] = maze_seed
-        env_config = config['env_config']
+        config['mazeseed'] = maze_seed
+        self.env_config = config
 
         self.env = MalmoMazeEnv(
             mazeseed=maze_seed,
-            width=env_config["width"],
-            height=env_config["height"],
-            xml=env_config["mission_file"],
-            millisec_per_tick=env_config['millisec_per_tick'],
-            max_loop=env_config['max_loop'],
-            mission_timeout_ms=env_config['mission_timeout_ms'],
-            step_reward=env_config['step_reward'],
-            win_reward=env_config['win_reward'],
-            lose_reward=env_config['lose_reward'],
-            action_space=env_config['action_space'],
-            client_port=env_config['client_port'],
-            time_wait=env_config['time_wait'])
+            width=self.env_config["width"],
+            height=self.env_config["height"],
+            xml=self.env_config["xml"],
+            millisec_per_tick=self.env_config['millisec_per_tick'],
+            max_loop=self.env_config['max_loop'],
+            mission_timeout_ms=self.env_config['mission_timeout_ms'],
+            step_reward=self.env_config['step_reward'],
+            win_reward=self.env_config['win_reward'],
+            lose_reward=self.env_config['lose_reward'],
+            action_space=self.env_config['action_space'],
+            client_port=self.env_config['client_port'],
+            time_wait=self.env_config['time_wait'])
+        self.max_path_length=200
         self.observation_space = gym.spaces.Box(high=355,
                                                 low=0,
-                                                shape=(env_config["height"],
-                                                       env_config["width"],
+                                                shape=(self.env_config["height"],
+                                                       self.env_config["width"],
                                                        3),
                                                 dtype=np.float32)
         self.action_space = gym.spaces.Discrete(len(self.env.action_space))
@@ -50,18 +51,24 @@ class CustomEnv(gym.Env):
         return x
 
     def step(self, action):
+        #print(self.observation_space)
         x = self.env.step(action)
         # TODO: Option to use the observations from the info (next 2 lines)
         # observations = self.process_obs(x[0], x[3])
         # reward = x[1]
-        info = {
+        #while(len(x[3].rewards)==0):
+        #    print("___________________________________________")
+        #    print(len(x[3].rewards))
+        #    x = self.env.step(action)
+        #print(len(x[3].rewards))
+        #info = {
             # "obs":x[3].observations,
             # "rewards":x[3].rewards,
             # "frames":x[3].number_of_video_frames_since_last_state,
-            "rewards": x[3].rewards[0].getValue()
-        }
+        #    "rewards": x[3].rewards[0].getValue()
+        #}
 
-        return x[0], x[1], x[2], info  # TODO: Is this structured required by rrllib or can we change it?
+        return x[0], x[1], x[2], {}# TODO: Is this structured required by rrllib or can we change it?
 
     @staticmethod
     def process_obs(np_obs, info):
@@ -153,7 +160,7 @@ def main():
     general_config = c.get_config('general')['config']
     train_configs = c.get_config('train')
     
-    for train_config in train_configs:
+    for train_config in [train_configs[2]]:
         print()
         print("# ------ New Training ------ #")
         train_config = train_config['config']
@@ -161,7 +168,10 @@ def main():
         
         # Set the name of the training agent
         height, width = env_config['height'], env_config['width']
-        train_config['model']['conv_filters'] = (height, width, 3)
+        train_config['model']['conv_filters'] = [[8,6,4],
+                                                 [16,6,4],
+                                                 [32,6,4]]
+
         train_name = get_train_name(name=general_config['name'], c=train_config)
         print("Training session name: ", train_name)
         
@@ -171,18 +181,27 @@ def main():
         log_path = os.path.join(general_config['log_path'], train_name)
         os.makedirs(checkpoint_path, exist_ok=True)
         os.makedirs(log_path, exist_ok=True)
-        
+        #env = CustomEnv(env_config)
+        #env.reset()
+
+        #print("test")
+        #time.sleep(5)
+
         # Create the environment
         algo = PPO(env=CustomEnv, config=train_config)
-        
         # Train the agent
         train_epochs = int(general_config['train_epochs'])
         start_time = time.time()
+        last_eval = 0
+        print("################################starting training#####################################")
         for epoch in range(train_epochs):
-            info = algo.train()  # TODO: Is the info the output of the step?
-
+            x = info = algo.train()  # TODO: Is the info the output of the step?
+            print(x)
             if epoch % save_freq == 0:
                 algo.save_checkpoint(checkpoint_path)
+
+                print(f"Checkpoint saved.")
+                print(f"{(time.time()-start_time)/60:0.1f} minutes elapsed.")
                 # TODO: Also print the average, min, max reward, (and loss??)
                 with open(f'{log_path}/epoch{epoch}.pkl', 'wb') as f:
                     pickle.dump(info, f)

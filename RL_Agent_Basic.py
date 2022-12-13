@@ -10,7 +10,10 @@ from RLcraft import MalmoMazeEnv
 import numpy as np
 import os
 import time
+import matplotlib.pyplot as plt
+from PIL import Image
 #from ray.rllib.agents.ppo import PPO
+from sklearn.decomposition import PCA
 
 from ray.rllib.algorithms.ppo import PPO
 
@@ -46,11 +49,42 @@ class CustomEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(len(self.env.action_space))
 
     def reset(self):
+        maze_seed = random.randint(1, 9999)
+        self.env.mazeseed = maze_seed
         x = self.env.reset()
+        img = self.pca_image_compress(x)
+        img = Image.fromarray(img, 'RGB')
+        img.save()
         return x
+
+    def pca_image_compress(self,img):
+
+        img_r = Image.fromarray(img, 'RGB')
+        img_r.save('out_n.png')
+
+
+        pca = PCA(n_components = 140)
+        img_s = np.reshape(img.transpose((0,2,1)),(self.env_config["height"],-1))
+        img_r = Image.fromarray(img_s, 'L')
+        img_r.save('out_t.png')
+
+        pca.fit(img_s)
+
+        pca_t = pca.transform(img_s)
+        pca_recovered = pca.inverse_transform(pca_t)
+        img_r = Image.fromarray(pca_recovered, 'L')
+        img_r.save('out_r.png')
+        x = pca_recovered.reshape((140,140,3))
+
+        #temp = pca.inverse_transform(img_t)
+        #img_r = np.reshape(temp, (self.env_config["height"],self.env_config["width"],3))
+        img_r = Image.fromarray(x, 'RGB')
+        img_r.save('out.png')
+        return img_r
 
     def step(self, action):
         #print(self.observation_space)
+        print("is here??????????????????????????????????????????????")
         x = self.env.step(action)
         # TODO: Option to use the observations from the info (next 2 lines)
         # observations = self.process_obs(x[0], x[3])
@@ -66,7 +100,13 @@ class CustomEnv(gym.Env):
             # "frames":x[3].number_of_video_frames_since_last_state,
         #    "rewards": x[3].rewards[0].getValue()
         #}
-
+        print("test 01 ---------------------------------")
+        img = Image.fromarray(x[0], 'RGB')
+        img = self.pca_image_compress(img)
+        img.save('out.png')
+        img = np.array(img)
+        print("test?02 -----------------------------------")
+        #print(img.max()+"+++++++ "+len(img)+"++++++++++++++++++++++++++"+len(img[0])+"++++++++++++++++++++++++++++++++++++++++++++++++++++")
         return x[0], x[1], x[2], {}# TODO: Is this structured required by rrllib or can we change it?
 
     @staticmethod
@@ -188,14 +228,17 @@ def main():
 
         # Create the environment
         algo = PPO(env=CustomEnv, config=train_config)
-        # Train the agent
+
+        policy = algo.get_policy()
+        print(policy.model.base_model.summary())
+# Train the agent
         train_epochs = int(general_config['train_epochs'])
         start_time = time.time()
         last_eval = 0
         print("################################starting training#####################################")
         for epoch in range(train_epochs):
-            x = info = algo.train()  # TODO: Is the info the output of the step?
-            print(x)
+            info = algo.train()  # TODO: Is the info the output of the step?
+
             if epoch % save_freq == 0:
                 print(f"Ran {(time.time()-start_time)/60:0.1f} minutes")
                 last_eval = time.time()

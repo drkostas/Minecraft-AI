@@ -42,7 +42,7 @@ class CustomEnv(gym.Env):
             action_space=self.env_config['action_space'],
             client_port=self.env_config['client_port'],
             time_wait=self.env_config['time_wait'])
-        self.max_path_length=200
+        self.max_path_length = 200
         self.observation_space = gym.spaces.Box(high=355,
                                                 low=0,
                                                 shape=(self.env_config["height"],
@@ -60,14 +60,14 @@ class CustomEnv(gym.Env):
         img.save()
         return x
 
-    def pca_image_compress(self,img):
+    def pca_image_compress(self, img):
 
         img_r = Image.fromarray(img, 'RGB')
         img_r.save('out_n.png')
 
-
-        pca = PCA(n_components = 140)
-        img_s = np.reshape(img.transpose((0,2,1)),(self.env_config["height"],-1))
+        pca = PCA(n_components=140)
+        img_s = np.reshape(img.transpose((0, 2, 1)),
+                           (self.env_config["height"], -1))
         img_r = Image.fromarray(img_s, 'L')
         img_r.save('out_t.png')
 
@@ -77,40 +77,37 @@ class CustomEnv(gym.Env):
         pca_recovered = pca.inverse_transform(pca_t)
         img_r = Image.fromarray(pca_recovered, 'L')
         img_r.save('out_r.png')
-        x = pca_recovered.reshape((140,140,3))
+        x = pca_recovered.reshape((140, 140, 3))
 
-        #temp = pca.inverse_transform(img_t)
-        #img_r = np.reshape(temp, (self.env_config["height"],self.env_config["width"],3))
+        # temp = pca.inverse_transform(img_t)
+        # img_r = np.reshape(temp, (self.env_config["height"],self.env_config["width"],3))
         img_r = Image.fromarray(x, 'RGB')
         img_r.save('out.png')
         return img_r
 
     def step(self, action):
-        #print(self.observation_space)
-        print("is here??????????????????????????????????????????????")
+        # print(self.observation_space)
         x = self.env.step(action)
         # TODO: Option to use the observations from the info (next 2 lines)
         # observations = self.process_obs(x[0], x[3])
         # reward = x[1]
-        #while(len(x[3].rewards)==0):
+        # while(len(x[3].rewards)==0):
         #    print("___________________________________________")
         #    print(len(x[3].rewards))
         #    x = self.env.step(action)
-        #print(len(x[3].rewards))
-        #info = {
-            # "obs":x[3].observations,
-            # "rewards":x[3].rewards,
-            # "frames":x[3].number_of_video_frames_since_last_state,
+        # print(len(x[3].rewards))
+        # info = {
+        # "obs":x[3].observations,
+        # "rewards":x[3].rewards,
+        # "frames":x[3].number_of_video_frames_since_last_state,
         #    "rewards": x[3].rewards[0].getValue()
-        #}
-        print("test 01 ---------------------------------")
+        # }
         img = Image.fromarray(x[0], 'RGB')
         img = self.pca_image_compress(img)
         img.save('out.png')
         img = np.array(img)
-        print("test?02 -----------------------------------")
-        #print(img.max()+"+++++++ "+len(img)+"++++++++++++++++++++++++++"+len(img[0])+"++++++++++++++++++++++++++++++++++++++++++++++++++++")
-        return x[0], x[1], x[2], {}# TODO: Is this structured required by rrllib or can we change it?
+        # TODO: Is this structured required by rrllib or can we change it?
+        return x[0], x[1], x[2], {}
 
     @staticmethod
     def process_obs(np_obs, info):
@@ -161,6 +158,7 @@ class CustomEnv(gym.Env):
     #     # print("Here is obs", obs)
     #     return obs
 
+
 def get_args():
     parser = argparse.ArgumentParser()
     # Required Args
@@ -201,46 +199,43 @@ def main():
     # Load configs from config class
     general_config = c.get_config('general')['config']
     train_configs = c.get_config('train')
-    
+
     for train_config in [train_configs[2]]:
         print()
         print("# ------ New Training ------ #")
         train_config = train_config['config']
         env_config = train_config['env_config']
-        
+
         # Set the name of the training agent
         height, width = env_config['height'], env_config['width']
-        train_config['model']['conv_filters'] = [[8,6,4],
-                                                 [16,6,4],
-                                                 [32,6,4]]
+        train_config['model']['conv_filters'] = [[8, 6, 4],
+                                                 [16, 6, 4],
+                                                 [32, 6, 4]]
 
-        train_name = get_train_name(name=general_config['name'], c=train_config)
+        train_name = get_train_name(
+            name=general_config['name'], c=train_config)
         print("Training session name: ", train_name)
-        
+
         # Create checkpoint directory
         save_freq = general_config['save_freq']
-        checkpoint_path = os.path.join(general_config['checkpoint_path'], train_name)
+        checkpoint_path = os.path.join(
+            general_config['checkpoint_path'], train_name)
         log_path = os.path.join(general_config['log_path'], train_name)
         os.makedirs(checkpoint_path, exist_ok=True)
         os.makedirs(log_path, exist_ok=True)
-        #env = CustomEnv(env_config)
-        #env.reset()
-
-        #print("test")
-        #time.sleep(5)
 
         # Create the environment
         algo = PPO(env=CustomEnv, config=train_config)
 
         policy = algo.get_policy()
         print(policy.model.base_model.summary())
-# Train the agent
+        # Train the agent
         train_epochs = int(general_config['train_epochs'])
         start_time = time.time()
         last_eval = 0
-        print("################################starting training#####################################")
+        print("#--------- Starting Training--------- #")
         for epoch in range(train_epochs):
-            info = algo.train()  # TODO: Is the info the output of the step?
+            info = algo.train()
 
             if epoch % save_freq == 0:
                 algo.save_checkpoint(checkpoint_path)
@@ -250,7 +245,8 @@ def main():
                 # TODO: Also print the average, min, max reward, (and loss??)
                 with open(f'{log_path}/epoch{epoch}.pkl', 'wb') as f:
                     pickle.dump(info, f)
-                print(f"Checkpoint saved (epoch {epoch} - {(time.time()-start_time)/60:0.1f} minutes elapsed).")
+                print(
+                    f"Checkpoint saved (epoch {epoch} - {(time.time()-start_time)/60:0.1f} minutes elapsed).")
         # Save data for final epoch just to be safe
         algo.save_checkpoint(checkpoint_path)
         print(f"Final Checkpoint saved.")

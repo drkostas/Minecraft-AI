@@ -36,7 +36,7 @@ This project has only been tested on Ubuntu 22.04. In theory any non arm based O
 
 
 ### OS Requirements <a name = "osinstalling"></a>
-First, you need to install the follwioing libraries:
+First, you need to install the following libraries:
 
 1. GCC and CMake
     ```ShellSession

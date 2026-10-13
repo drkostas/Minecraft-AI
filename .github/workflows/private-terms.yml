@@ -1,0 +1,26 @@
+name: Private terms
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Check the pull request
+        env:
+          TERMS: ${{ secrets.PRIVATE_TERMS }}
+          ALLOW: ${{ secrets.PRIVATE_ALLOW }}
+          TITLE: ${{ github.event.pull_request.title }}
+          BODY: ${{ github.event.pull_request.body }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: python3 .github/scripts/check_terms.py
